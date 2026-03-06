@@ -2,16 +2,16 @@
 
 A comprehensive repository containing all exercises, assignments, and exam projects for the **Android Application Development** course.
 
-## 👥 Contributors
+##  Contributors
 
 - **Nah Nah Sylvestre** (Lead Developer)
 - **Asongwe Lewis Fon** (Collaborator)
 
-## 📚 Course Overview
+##  Course Overview
 
 This repository serves as a collection of practical assignments and exercises completed during the Android Application Development course. It showcases the progression from fundamental Android concepts to more advanced application development practices.
 
-## 📁 Repository Structure
+##  Repository Structure
 
 ```
 Android-Application-Development/
@@ -21,7 +21,7 @@ Android-Application-Development/
 └── README.md          # This file
 ```
 
-## 🛠️ Technologies Used
+##  Technologies Used
 
 - **Language**: Kotlin
 - **Platform**: Android
@@ -29,7 +29,7 @@ Android-Application-Development/
 - **Minimum SDK**: API 21 and above
 - **Build System**: Gradle
 
-## 📝 What's Included
+##  What's Included
 
 ### Exercises
 Short coding exercises designed to reinforce core Android concepts such as:
@@ -53,7 +53,7 @@ Comprehensive exam and capstone projects demonstrating:
 - Best practices and design patterns
 - User experience optimization
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### Prerequisites
 - Android Studio (latest version)
@@ -81,7 +81,7 @@ Each exercise, assignment, or project can be run individually:
 - Select the desired module from the Module dropdown in Android Studio
 - Click the Run button or press `Shift + F10`
 
-## 📖 Learning Outcomes
+##  Learning Outcomes
 
 Upon completion of this course and review of these projects, you will understand:
 - Android application lifecycle
@@ -92,7 +92,7 @@ Upon completion of this course and review of these projects, you will understand
 - Integrating with external APIs
 - Following Android best practices and design patterns
 
-## 🔄 Development Workflow
+##  Development Workflow
 
 Each exercise and assignment includes:
 - Clear problem statements
@@ -100,17 +100,17 @@ Each exercise and assignment includes:
 - Starter code (where applicable)
 - Expected outcomes
 
-## 📞 Contact & Support
+##  Contact & Support
 
 For questions or clarifications regarding the course content:
 - **GitHub Issues**: Use the repository's issue tracker for bug reports or questions
 - **Discussions**: Engage in course-related discussions
 
-## 📄 License
+##  License
 
 This project is provided as educational material for the Android Application Development course. Usage is restricted to course participants and is intended for learning purposes only.
 
-## 🎓 Course Information
+##  Course Information
 
 - **Course Name**: Android Application Development
 - **Institution**: [Add your institution if applicable]
