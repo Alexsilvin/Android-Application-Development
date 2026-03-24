@@ -1,6 +1,21 @@
 .gradle/
 .idea/
-local.properties
+.vscode/
+build/
 **/build/
 *.iml
+local.properties
 captures/
+
+# Gradle wrapper
+gradle/
+
+# Kotlin
+.kotlinc/
+
+# Logs
+*.log
+
+# APKs
+*.apk
+*.ap_

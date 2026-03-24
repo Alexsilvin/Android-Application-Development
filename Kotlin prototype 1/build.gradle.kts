@@ -1,14 +1,25 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
-    kotlin("jvm") version "2.1.0"
+    kotlin("jvm") version "1.9.23"
     application
+}
+
+kotlin {
+    jvmToolchain(21)
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_21)
+    }
 }
 
 repositories {
     mavenCentral()
 }
 
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    kotlinOptions.jvmTarget = "21"
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(21))
+    }
 }
 
 dependencies {
@@ -20,4 +31,22 @@ dependencies {
 
 application {
     mainClass.set("MainKt")
+}
+
+val excelCalculatorArgs = providers.gradleProperty("appArgs")
+    .orElse("")
+    .map { argsLine ->
+        argsLine.split(Regex("\\s+"))
+            .filter { it.isNotBlank() }
+    }
+
+tasks.register<JavaExec>("runExcelGradeCalculator") {
+    group = "application"
+    description = "Runs the Excel-based student grade calculator."
+    classpath = sourceSets["main"].runtimeClasspath
+    mainClass.set("ExcelStudentGradeCalculatorKt")
+    standardInput = System.`in`
+    doFirst {
+        args(excelCalculatorArgs.get())
+    }
 }

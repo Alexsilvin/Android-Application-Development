@@ -1,15 +1,16 @@
 # Student Grades Application
 
-This Kotlin console application calculates student grades from an Excel file. The application reads student data, computes grades based on specified criteria, and allows for exporting results back to an Excel file.
+This project contains console-based Kotlin examples for student grade processing. A separate Excel-based calculator is available for importing student scores from a spreadsheet, previewing the computed grades in a terminal table, and exporting the result to a new Excel file.
 
 ## Project Structure
 
-```
+```text
 student-grades-app
 ├── src
 │   └── main
 │       └── kotlin
-│           └── Main.kt
+│           ├── Main.kt
+│           └── ExcelStudentGradeCalculator.kt
 ├── build.gradle.kts
 ├── settings.gradle.kts
 └── README.md
@@ -35,31 +36,45 @@ student-grades-app
    ./gradlew build
    ```
 
-4. **Run the Application**: 
-   Execute the application using:
+4. **Run the Excel Calculator**:
+   Execute the Excel-based version using:
    ```
-   ./gradlew run
+   gradle runExcelGradeCalculator
+   ```
+
+   You can also pass the input and output file paths directly:
+   ```
+   gradle runExcelGradeCalculator -PappArgs="students.xlsx graded-students.xlsx"
    ```
 
 ## Usage Instructions
 
-1. Upon running the application, you will be welcomed and prompted to enter the directory of the Excel file containing student data.
-2. The Excel file should have the following columns:
+1. Prepare an Excel sheet with a header row containing these columns:
    - Name
-   - Matricule
-   - CA (Continuous Assessment) - 30% of the total mark
-   - Exam Mark - 70% of the total mark
-3. The application will calculate the total marks and assign grades based on the following scale:
-   - A: 90 and above
-   - B+: 80 to 89
-   - B: 70 to 79
-   - C+: 60 to 69
-   - C: 50 to 59
-   - D+: 45 to 49
-   - D: 40 to 44
-   - F: Below 40
-4. A preview of student names and their corresponding grades will be displayed in the terminal.
-5. You will be asked if you want to export the results to a new Excel file. If you choose to do so, the application will create the file in the specified directory.
+   - Score
+2. Run the calculator and provide the input file path when prompted, or pass it with `-PappArgs`.
+3. The application reads the spreadsheet, calculates grades using this scale:
+   - A: 90 to 100
+   - B: 80 to 89
+   - C: 70 to 79
+   - D: 60 to 69
+   - F: below 60
+4. A preview table is printed in the terminal with each student's name, score, and grade.
+5. You can export the processed result to a new `.xlsx` file.
+
+## Excel Format
+
+The first row must contain headers. Example:
+
+```text
+| Name    | Score |
+|---------|-------|
+| Alice   | 95    |
+| Bob     | 82    |
+| Charlie | 67    |
+```
+
+The importer accepts `.xls` and `.xlsx` files. The exported result is written as `.xlsx`.
 
 ## Dependencies
 
