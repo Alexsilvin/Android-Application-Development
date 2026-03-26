@@ -1,4 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">first-kot</string>
+    <string name="app_name">Student Grade Calculator</string>
+    <string name="import_excel">📁 Import Excel File</string>
+    <string name="export_excel">⬆️ Export Graded Excel File</string>
+    <string name="save_to_phone">💾 Save to Phone</string>
+    <string name="share_file">📤 Share Excel File</string>
+    <string name="toggle_theme">🌙</string>
+    <string name="no_file_imported">No file imported yet.</string>
+    <string name="preview_empty">Preview will appear here...</string>
+    <string name="import_success">Imported %1$d students successfully.</string>
+    <string name="export_success">Export completed successfully.</string>
+    <string name="export_failed">Export failed: %1$s</string>
+    <string name="nothing_to_export">Nothing to export. Import a file first.</string>
+    <string name="file_saved">File saved to phone.</string>
+    <string name="share_via">Share via</string>
 </resources>
