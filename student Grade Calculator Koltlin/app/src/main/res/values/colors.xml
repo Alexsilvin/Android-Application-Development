@@ -26,4 +26,8 @@
     <color name="pass_color">#4CAF50</color>
     <color name="fail_color">#F44336</color>
     <color name="warning_color">#FF9800</color>
+    
+    <!-- Additional UI colors -->
+    <color name="grade_badge_color">#6200EA</color>
+    <color name="delete_color">#F44336</color>
 </resources>

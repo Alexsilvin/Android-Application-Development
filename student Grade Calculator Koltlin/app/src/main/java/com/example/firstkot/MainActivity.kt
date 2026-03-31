@@ -13,6 +13,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.FileProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -21,6 +23,8 @@ import java.util.zip.ZipInputStream
 import javax.xml.parsers.DocumentBuilderFactory
 import org.w3c.dom.Element
 import android.content.Context
+import androidx.appcompat.app.AlertDialog
+import android.widget.EditText
 
 class MainActivity : AppCompatActivity() {
 
@@ -51,8 +55,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var passPercentText: TextView
     private lateinit var failPercentText: TextView
     private lateinit var totalStudentsText: TextView
+    private lateinit var studentsRecyclerView: RecyclerView
+    private lateinit var studentsListAdapter: StudentAdapter
+    private lateinit var studentsListHeader: TextView
 
-    private var gradedStudents: List<StudentGrade> = emptyList()
+    private var gradedStudents: MutableList<StudentGrade> = mutableListOf()
     private var lastExportedFilePath: String? = null
     private var lastExportedUri: Uri? = null
     private var isDarkMode = false
@@ -98,6 +105,15 @@ class MainActivity : AppCompatActivity() {
         passPercentText = findViewById(R.id.passPercentText)
         failPercentText = findViewById(R.id.failPercentText)
         totalStudentsText = findViewById(R.id.totalStudentsText)
+        studentsRecyclerView = findViewById(R.id.studentsRecyclerView)
+        studentsListHeader = findViewById(R.id.studentsListHeader)
+
+        // Setup RecyclerView
+        studentsListAdapter = StudentAdapter(gradedStudents) { position ->
+            showEditStudentDialog(position)
+        }
+        studentsRecyclerView.layoutManager = LinearLayoutManager(this)
+        studentsRecyclerView.adapter = studentsListAdapter
 
         importButton.setOnClickListener {
             importExcelLauncher.launch(
@@ -237,37 +253,37 @@ class MainActivity : AppCompatActivity() {
                 }
             } ?: throw IllegalStateException("Could not read selected file.")
 
-            gradedStudents = parsedStudents.mapNotNull { calculateStudentGrade(it) }
+            gradedStudents = parsedStudents.mapNotNull { calculateStudentGrade(it) }.toMutableList()
         }.onSuccess {
             if (gradedStudents.isEmpty()) {
                 exportButton.isEnabled = false
                 saveToPhoneButton.isEnabled = false
                 showStatus("No valid student rows found in the Excel file.")
+                studentsListHeader.visibility = TextView.GONE
+                previewText.visibility = TextView.VISIBLE
                 previewText.text = "Preview is empty. Check columns: Name, Matricule, CA, Exam."
-                return
+                return@onSuccess
             }
 
             exportButton.isEnabled = true
             saveToPhoneButton.isEnabled = true
-            val previewLines = buildString {
-                appendLine("Preview (Name | Matricule | Total | Grade)")
-                appendLine("-----------------------------------------")
-                gradedStudents.forEach { student ->
-                    appendLine(
-                        "${student.name} | ${student.matricule} | " +
-                            "${"%.2f".format(student.total)} | ${student.grade}"
-                    )
-                }
-            }
-            previewText.text = previewLines
+            
+            // Update RecyclerView
+            studentsListAdapter.updateStudents(gradedStudents)
+            studentsListHeader.visibility = TextView.VISIBLE
+            previewText.visibility = TextView.GONE
+            
             updateStatistics()
             showStatus("Imported ${gradedStudents.size} students successfully.")
         }.onFailure { error ->
             exportButton.isEnabled = false
             saveToPhoneButton.isEnabled = false
             shareButton.isEnabled = false
-            gradedStudents = emptyList()
+            gradedStudents = mutableListOf()
+            studentsListAdapter.updateStudents(gradedStudents)
             showStatus("Import failed: ${error.message ?: "Unknown error"}")
+            studentsListHeader.visibility = TextView.GONE
+            previewText.visibility = TextView.VISIBLE
             previewText.text = "Preview will appear here..."
         }
     }
@@ -569,6 +585,104 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent.createChooser(intent, "Share Excel File"))
         }.onFailure { error ->
             showStatus("Share failed: ${error.message ?: "Unknown error"}")
+        }
+    }
+
+    private fun showEditStudentDialog(position: Int) {
+        val student = gradedStudents[position]
+        val dialogView = layoutInflater.inflate(R.layout.edit_student_dialog, null)
+        
+        val nameView = dialogView.findViewById<TextView>(R.id.editStudentName)
+        val matriculeView = dialogView.findViewById<TextView>(R.id.editStudentMatricule)
+        val caMarkEdit = dialogView.findViewById<EditText>(R.id.editCaMark)
+        val examMarkEdit = dialogView.findViewById<EditText>(R.id.editExamMark)
+        val deleteBtn = dialogView.findViewById<Button>(R.id.buttonDeleteStudent)
+        val cancelBtn = dialogView.findViewById<Button>(R.id.buttonCancel)
+        val saveBtn = dialogView.findViewById<Button>(R.id.buttonSave)
+
+        nameView.text = student.name
+        matriculeView.text = student.matricule
+        caMarkEdit.setText(String.format("%.2f", student.caMark))
+        examMarkEdit.setText(String.format("%.2f", student.examMark))
+
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("Edit Student Grade")
+            .setView(dialogView)
+            .setCancelable(false)
+            .create()
+
+        deleteBtn.setOnClickListener {
+            AlertDialog.Builder(this)
+                .setTitle("Delete Student")
+                .setMessage("Are you sure you want to delete ${student.name}?")
+                .setPositiveButton("DELETE") { _, _ ->
+                    deleteStudent(position)
+                    dialog.dismiss()
+                }
+                .setNegativeButton("CANCEL", null)
+                .show()
+        }
+
+        saveBtn.setOnClickListener {
+            val newCaMark = caMarkEdit.text.toString().toDoubleOrNull()
+            val newExamMark = examMarkEdit.text.toString().toDoubleOrNull()
+
+            if (newCaMark == null || newExamMark == null) {
+                Toast.makeText(this, "Please enter valid marks", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            if (newCaMark !in 0.0..30.0 || newExamMark !in 0.0..70.0) {
+                Toast.makeText(this, "Marks out of range: CA (0-30), Exam (0-70)", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            updateStudentGrade(position, newCaMark, newExamMark)
+            dialog.dismiss()
+        }
+
+        cancelBtn.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
+    private fun updateStudentGrade(position: Int, newCaMark: Double, newExamMark: Double) {
+        val oldStudent = gradedStudents[position]
+        val total = newCaMark + newExamMark
+        val newGrade = gradeFromTotal(total)
+
+        val updatedStudent = StudentGrade(
+            name = oldStudent.name,
+            matricule = oldStudent.matricule,
+            caMark = newCaMark,
+            examMark = newExamMark,
+            total = total,
+            grade = newGrade
+        )
+
+        gradedStudents[position] = updatedStudent
+        studentsListAdapter.notifyItemChanged(position)
+        updateStatistics()
+        shareButton.isEnabled = false
+        showStatus("Student grade updated successfully")
+    }
+
+    private fun deleteStudent(position: Int) {
+        val studentName = gradedStudents[position].name
+        gradedStudents.removeAt(position)
+        studentsListAdapter.notifyItemRemoved(position)
+        updateStatistics()
+        shareButton.isEnabled = false
+        showStatus("Student \'$studentName\' deleted successfully")
+
+        if (gradedStudents.isEmpty()) {
+            exportButton.isEnabled = false
+            saveToPhoneButton.isEnabled = false
+            studentsListHeader.visibility = TextView.GONE
+            previewText.visibility = TextView.VISIBLE
+            previewText.text = "No students in the list. Import a file to continue."
         }
     }
 }
