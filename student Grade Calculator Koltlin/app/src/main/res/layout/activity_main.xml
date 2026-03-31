@@ -1,68 +1,222 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="?attr/android:windowBackground">
 
-    <TextView
-        android:id="@+id/titleText"
-        android:layout_width="0dp"
+    <!-- Header with Title and Theme Button -->
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Student Grade Calculator"
-        android:textStyle="bold"
-        android:textSize="20sp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="16dp">
 
+        <TextView
+            android:id="@+id/titleText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Student Grade Calculator"
+            android:textStyle="bold"
+            android:textSize="24sp"
+            android:textColor="?attr/android:textColor" />
+
+        <Button
+            android:id="@+id/themeToggleButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🌙"
+            android:textSize="18sp"
+            android:padding="8dp"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
+    <!-- Import Button -->
     <Button
         android:id="@+id/importButton"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Import Excel File"
-        app:layout_constraintTop_toBottomOf="@id/titleText"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="12dp" />
+        android:text="📁 Import Excel File"
+        android:textSize="16sp"
+        android:padding="12dp"
+        android:layout_marginBottom="12dp" />
 
+    <!-- Status Text -->
     <TextView
         android:id="@+id/statusText"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="No file imported yet."
-        app:layout_constraintTop_toBottomOf="@id/importButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="12dp" />
+        android:textSize="14sp"
+        android:textColor="?attr/android:textColorSecondary"
+        android:layout_marginBottom="12dp" />
 
-    <ScrollView
-        android:id="@+id/previewScroll"
-        android:layout_width="0dp"
+    <!-- Statistics Panel -->
+    <LinearLayout
+        android:id="@+id/statsPanel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="12dp"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="12dp"
+            android:background="@color/pass_color"
+            android:layout_margin="4dp">
+
+            <TextView
+                android:id="@+id/passPercentText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0%"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary_light" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Passed"
+                android:textSize="12sp"
+                android:textColor="@color/text_primary_light" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="12dp"
+            android:background="@color/fail_color"
+            android:layout_margin="4dp">
+
+            <TextView
+                android:id="@+id/failPercentText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0%"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary_light" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Failed"
+                android:textSize="12sp"
+                android:textColor="@color/text_primary_light" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="12dp"
+            android:background="@color/warning_color"
+            android:layout_margin="4dp">
+
+            <TextView
+                android:id="@+id/totalStudentsText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary_light" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Total"
+                android:textSize="12sp"
+                android:textColor="@color/text_primary_light" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Students List RecyclerView -->
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:fillViewport="true"
-        app:layout_constraintTop_toBottomOf="@id/statusText"
-        app:layout_constraintBottom_toTopOf="@id/exportButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="12dp"
-        android:layout_marginBottom="12dp">
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_marginBottom="12dp"
+        android:background="?attr/android:windowBackground">
+
+        <TextView
+            android:id="@+id/studentsListHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Students List - Click to Edit/Delete"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="?attr/android:textColor"
+            android:padding="8dp"
+            android:visibility="gone" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/studentsRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical" />
 
         <TextView
             android:id="@+id/previewText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Preview will appear here..." />
-    </ScrollView>
+            android:layout_height="match_parent"
+            android:text="Preview will appear here..."
+            android:textSize="12sp"
+            android:padding="8dp"
+            android:textColor="?attr/android:textColor"
+            android:fontFamily="monospace"
+            android:visibility="gone" />
+    </LinearLayout>
 
-    <Button
-        android:id="@+id/exportButton"
-        android:layout_width="0dp"
+    <!-- Action Buttons Container -->
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Export Graded Excel File"
-        android:enabled="false"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:orientation="vertical"
+        android:layout_marginTop="8dp">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <!-- Save to Phone Button -->
+        <Button
+            android:id="@+id/saveToPhoneButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="💾 Save to Phone"
+            android:enabled="false"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Share Button -->
+        <Button
+            android:id="@+id/shareButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="📤 Share Excel File"
+            android:enabled="false"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Export and Save in App Button -->
+        <Button
+            android:id="@+id/exportButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="⬆️ Export Graded Excel File"
+            android:enabled="false" />
+    </LinearLayout>
+
+</LinearLayout>

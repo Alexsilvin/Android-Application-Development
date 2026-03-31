@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dark theme colors -->
+    <color name="primary_light">@color/primary_dark</color>
+    <color name="primary_variant_light">@color/primary_variant_dark</color>
+    <color name="secondary_light">@color/secondary_dark</color>
+    <color name="background_light">@color/background_dark</color>
+    <color name="surface_light">@color/surface_dark</color>
+    <color name="error_light">@color/error_dark</color>
+    <color name="text_primary_light">@color/text_primary_dark</color>
+    <color name="text_secondary_light">@color/text_secondary_dark</color>
+    <color name="divider_light">@color/divider_dark</color>
+</resources>

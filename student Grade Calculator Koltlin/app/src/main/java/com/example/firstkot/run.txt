@@ -1,0 +1,5 @@
+cd "student Grade Calculator Koltlin"
+.\gradlew.bat installDebug
+
+cd "c:\Users\Nah Nah Sylvestre\Documents\Projects\Kotlin\Android Application Development\student Grade Calculator Koltlin" ; 
+.\gradlew.bat installDebug
